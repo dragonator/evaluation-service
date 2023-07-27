@@ -2,16 +2,19 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
+	"github.com/dragonator/evaluation-service/module/evaluation/contract"
+	"github.com/dragonator/evaluation-service/module/evaluation/internal/http/service/svc"
 	"github.com/dragonator/evaluation-service/module/evaluation/internal/operation/evaluationprocessing"
 )
 
 // EvaluationProcessingOp is a contract to a evaluation processing operation.
 type EvaluationProcessingOp interface {
 	Evaluate(ctx context.Context, expressions string) (float64, error)
-	Validate(ctx context.Context, expressions string) (bool, error)
-	Errors(ctx context.Context, expressions string) ([]*evaluationprocessing.EvaluationError, error)
+	Validate(ctx context.Context, expressions string) (*evaluationprocessing.ValidationResult, error)
+	Errors(ctx context.Context, expressions string) ([]*evaluationprocessing.ExpressionError, error)
 }
 
 // EvaluationHandler holds implementation of handlers for evaluations.
