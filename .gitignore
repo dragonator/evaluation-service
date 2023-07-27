@@ -23,9 +23,6 @@ go.work
 # Env files
 .env
 
-# VScode files
-.vscode/
-
 # Log files
 **.log
 
