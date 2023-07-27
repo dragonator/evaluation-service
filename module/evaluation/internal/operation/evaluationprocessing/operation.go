@@ -32,6 +32,6 @@ func (o *Operation) Validate(ctx context.Context, expressions string) (*Validati
 	return nil, nil
 }
 
-func (o *Operation) Errors(ctx context.Context, expressions string) ([]*ExpressionError, error) {
+func (o *Operation) Errors(ctx context.Context) ([]*ExpressionError, error) {
 	return nil, nil
 }
