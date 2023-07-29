@@ -7,9 +7,10 @@ import (
 type ExpressionErrorType string
 
 const (
-	ErrTypeInvalidSyntax        = "ErrInvalidSyntax"
-	ErrTypeUnsupportedOperation = "ErrUnsupportedOperation"
-	ErrTypeNonMathQuestion      = "ErrNonMathQuestion"
+	ErrTypeInvalidSyntax          = "ErrInvalidSyntax"
+	ErrTypeInvalidOperationSyntax = "ErrInvalidOperationSyntax"
+	ErrTypeUnsupportedOperation   = "ErrUnsupportedOperation"
+	ErrTypeNonMathQuestion        = "ErrNonMathQuestion"
 )
 
 type ParserError struct {
@@ -22,7 +23,8 @@ func (ee ParserError) Error() string {
 }
 
 var (
-	ErrInvalidSyntax        = ParserError{Type: ErrTypeInvalidSyntax, Err: errors.New("invalid expression syntax")}
-	ErrUnsupportedOperation = ParserError{Type: ErrTypeUnsupportedOperation, Err: errors.New("unsupported operation")}
-	ErrNonMathQuestion      = ParserError{Type: ErrTypeNonMathQuestion, Err: errors.New("non-math question")}
+	ErrInvalidSyntax          = ParserError{Type: ErrTypeInvalidSyntax, Err: errors.New("invalid expression syntax")}
+	ErrInvalidOperationSyntax = ParserError{Type: ErrTypeInvalidOperationSyntax, Err: errors.New("invalid operation syntax")}
+	ErrUnsupportedOperation   = ParserError{Type: ErrTypeUnsupportedOperation, Err: errors.New("unsupported operation")}
+	ErrNonMathQuestion        = ParserError{Type: ErrTypeNonMathQuestion, Err: errors.New("non-math question")}
 )

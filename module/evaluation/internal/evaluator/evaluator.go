@@ -4,6 +4,10 @@ import "fmt"
 
 type OperationType string
 
+func (ot OperationType) String() string {
+	return string(ot)
+}
+
 const (
 	PlusOp           OperationType = "plus"
 	MinusOp          OperationType = "minus"

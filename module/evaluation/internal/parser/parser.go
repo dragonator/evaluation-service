@@ -29,15 +29,39 @@ func NewParser() *Parser {
 func (p *Parser) ParseOperation(operation, arg string) (evaluator.Operation, error) {
 	var op evaluator.Operation
 
-	switch evaluator.OperationType(operation) {
+	operationParts := strings.Split(operation, " ")
+
+	invalidOperationErr := fmt.Errorf("%w: %s", ErrInvalidOperationSyntax, operation)
+
+	switch evaluator.OperationType(operationParts[0]) {
 	case evaluator.PlusOp:
+		if operation != evaluator.PlusOp.String() {
+			return op, invalidOperationErr
+		}
+
 		op.Type = evaluator.PlusOp
+
 	case evaluator.MinusOp:
+		if operation != evaluator.MinusOp.String() {
+			return op, invalidOperationErr
+		}
+
 		op.Type = evaluator.MinusOp
+
 	case evaluator.DivisionOp:
+		if operation != evaluator.DivisionOp.String() {
+			return op, invalidOperationErr
+		}
+
 		op.Type = evaluator.DivisionOp
+
 	case evaluator.MultiplicationOp:
+		if operation != evaluator.MultiplicationOp.String() {
+			return op, invalidOperationErr
+		}
+
 		op.Type = evaluator.MultiplicationOp
+
 	default:
 		return op, fmt.Errorf("%w: %s", ErrUnsupportedOperation, operation)
 	}
