@@ -7,6 +7,6 @@ type ValidateRequest struct {
 
 // ValidateResponse is a server response object for validating expressions.
 type ValidateResponse struct {
-	Valid  bool   `json:"valid,omitempty"`
+	Valid  bool   `json:"valid"`
 	Reason string `json:"reason,omitempty"`
 }

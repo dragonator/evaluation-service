@@ -85,6 +85,8 @@ func (o *Operation) Validate(ctx context.Context, expression string) (*Validatio
 		if err != nil {
 			return nil, err
 		}
+
+		return &res, nil
 	}
 
 	res.Valid = true
