@@ -3,9 +3,11 @@ package evaluation
 import (
 	"fmt"
 
+	"github.com/dragonator/evaluation-service/module/evaluation/internal/evaluator"
 	"github.com/dragonator/evaluation-service/module/evaluation/internal/http/handler"
 	"github.com/dragonator/evaluation-service/module/evaluation/internal/http/service"
 	"github.com/dragonator/evaluation-service/module/evaluation/internal/operation/evaluationprocessing"
+	"github.com/dragonator/evaluation-service/module/evaluation/internal/parser"
 	"github.com/dragonator/evaluation-service/pkg/config"
 	"github.com/dragonator/evaluation-service/pkg/logger"
 )
@@ -25,7 +27,9 @@ type ServerModule struct {
 
 // NewServerModule is a construction function for ServerModule.
 func NewServerModule(config *config.Config, logger *logger.Logger) (*ServerModule, error) {
-	evaluationProcessingOp := evaluationprocessing.NewOperation()
+	parser := parser.NewParser()
+	evaluator := evaluator.NewEvaluator()
+	evaluationProcessingOp := evaluationprocessing.NewOperation(parser, evaluator)
 	evaluationHandler := handler.NewEvaluationHandler(evaluationProcessingOp)
 	router := service.NewRouter(evaluationHandler)
 
