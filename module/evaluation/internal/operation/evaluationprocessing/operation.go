@@ -1,7 +1,6 @@
 package evaluationprocessing
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -46,7 +45,8 @@ func NewOperation(parser *parser.Parser, evaluator *evaluator.Evaluator) *Operat
 	}
 }
 
-func (o *Operation) Evaluate(ctx context.Context, expression string) (float64, error) {
+// Evaluate parses and evaluates an expression represented by string.
+func (o *Operation) Evaluate(expression string) (float64, error) {
 	expr, err := o.parser.ParseExpression(expression)
 	if err != nil {
 		errSave := o.saveError(err, expression, _evaluateEndpoint)
@@ -73,7 +73,8 @@ func (o *Operation) Evaluate(ctx context.Context, expression string) (float64, e
 	return res, nil
 }
 
-func (o *Operation) Validate(ctx context.Context, expression string) (*ValidationResult, error) {
+// Validate parses and validates an expression represented by string.
+func (o *Operation) Validate(expression string) (*ValidationResult, error) {
 	var res ValidationResult
 
 	_, err := o.parser.ParseExpression(expression)
@@ -94,8 +95,17 @@ func (o *Operation) Validate(ctx context.Context, expression string) (*Validatio
 	return &res, nil
 }
 
-func (o *Operation) Errors(ctx context.Context) ([]*ExpressionError, error) {
-	return nil, nil
+// Errors returns a list of expression errors occured during evaluation or validation of expressions.
+func (o *Operation) Errors() []*ExpressionError {
+	res := make([]*ExpressionError, 0, 10)
+
+	o.expressionErrors.Range(func(key, value any) bool {
+		res = append(res, value.(*ExpressionError))
+
+		return true
+	})
+
+	return res
 }
 
 func (o *Operation) saveError(err error, expression string, endpoint string) error {

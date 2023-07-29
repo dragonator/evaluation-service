@@ -20,62 +20,55 @@ var (
 	_operationRegex   = regexp.MustCompile(_operationPart)
 )
 
+// Parser implements functionality for parsing an expression string to expression object.
 type Parser struct{}
 
+// NewParser is a construction function for Parser.
 func NewParser() *Parser {
 	return &Parser{}
 }
 
+// ParseOperation parses single operation string to Operation object.
 func (p *Parser) ParseOperation(operation, arg string) (evaluator.Operation, error) {
 	var op evaluator.Operation
 
-	operationParts := strings.Split(operation, " ")
+	operationPrefix := strings.Split(operation, " ")[0]
 
-	invalidOperationErr := fmt.Errorf("%w: %s", ErrInvalidOperationSyntax, operation)
+	var opType evaluator.OperationType
 
-	switch evaluator.OperationType(operationParts[0]) {
-	case evaluator.PlusOp:
-		if operation != evaluator.PlusOp.String() {
-			return op, invalidOperationErr
-		}
+	switch {
+	case strings.HasPrefix(evaluator.PlusOp.String(), operationPrefix):
+		opType = evaluator.PlusOp
 
-		op.Type = evaluator.PlusOp
+	case strings.HasPrefix(evaluator.MinusOp.String(), operationPrefix):
+		opType = evaluator.MinusOp
 
-	case evaluator.MinusOp:
-		if operation != evaluator.MinusOp.String() {
-			return op, invalidOperationErr
-		}
+	case strings.HasPrefix(evaluator.DivisionOp.String(), operationPrefix):
+		opType = evaluator.DivisionOp
 
-		op.Type = evaluator.MinusOp
-
-	case evaluator.DivisionOp:
-		if operation != evaluator.DivisionOp.String() {
-			return op, invalidOperationErr
-		}
-
-		op.Type = evaluator.DivisionOp
-
-	case evaluator.MultiplicationOp:
-		if operation != evaluator.MultiplicationOp.String() {
-			return op, invalidOperationErr
-		}
-
-		op.Type = evaluator.MultiplicationOp
+	case strings.HasPrefix(evaluator.MultiplicationOp.String(), operationPrefix):
+		opType = evaluator.MultiplicationOp
 
 	default:
 		return op, fmt.Errorf("%w: %s", ErrUnsupportedOperation, operation)
 	}
 
-	operationArg, err := strconv.ParseFloat(arg, 64)
+	if operation != opType.String() {
+		return op, fmt.Errorf("%w: %s", ErrInvalidOperationSyntax, operation)
+	}
+
+	opArg, err := strconv.ParseFloat(arg, 64)
 	if err != nil {
 		return op, fmt.Errorf("converting to integer: %v", err)
 	}
 
-	op.Arg = operationArg
+	op.Type = opType
+	op.Arg = opArg
 
 	return op, nil
 }
 
+// ParseOperation parses single expression string to Expression object.
 func (p *Parser) ParseExpression(expression string) (evaluator.Expression, error) {
 	var expr evaluator.Expression
 

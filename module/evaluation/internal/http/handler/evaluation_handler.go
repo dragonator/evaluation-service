@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -12,9 +11,9 @@ import (
 
 // EvaluationProcessingOp is a contract to a evaluation processing operation.
 type EvaluationProcessingOp interface {
-	Evaluate(ctx context.Context, expression string) (float64, error)
-	Validate(ctx context.Context, expression string) (*evaluationprocessing.ValidationResult, error)
-	Errors(ctx context.Context) ([]*evaluationprocessing.ExpressionError, error)
+	Evaluate(expression string) (float64, error)
+	Validate(expression string) (*evaluationprocessing.ValidationResult, error)
+	Errors() []*evaluationprocessing.ExpressionError
 }
 
 // EvaluationHandler holds implementation of handlers for evaluations.
@@ -38,7 +37,7 @@ func (rh *EvaluationHandler) Evaluate() func(w http.ResponseWriter, r *http.Requ
 			return
 		}
 
-		res, err := rh.evaluationProcessingOp.Evaluate(r.Context(), req.Expression)
+		res, err := rh.evaluationProcessingOp.Evaluate(req.Expression)
 		if err != nil {
 			errorResponse(w, err)
 			return
@@ -61,7 +60,7 @@ func (rh *EvaluationHandler) Validate() func(w http.ResponseWriter, r *http.Requ
 			return
 		}
 
-		result, err := rh.evaluationProcessingOp.Validate(r.Context(), req.Expression)
+		result, err := rh.evaluationProcessingOp.Validate(req.Expression)
 		if err != nil {
 			errorResponse(w, err)
 			return
@@ -79,11 +78,7 @@ func (rh *EvaluationHandler) Validate() func(w http.ResponseWriter, r *http.Requ
 // Errors returns all errors occurred during evalating expressions.
 func (rh *EvaluationHandler) Errors() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		result, err := rh.evaluationProcessingOp.Errors(r.Context())
-		if err != nil {
-			errorResponse(w, err)
-			return
-		}
+		result := rh.evaluationProcessingOp.Errors()
 
 		var resp contract.ErrorsResponse
 		for _, e := range result {
