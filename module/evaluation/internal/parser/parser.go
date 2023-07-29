@@ -14,9 +14,9 @@ var (
 	_validateEndpoint = "/validate"
 
 	_numberPart       = `(0|[1-9][0-9]*(\.[0-9]*)?)`
-	_operationPart    = fmt.Sprintf(` ([a-z ]+[a-z])(?: %s)?`, _numberPart)
-	_isMathRegex      = regexp.MustCompile(fmt.Sprintf(`^What is %s`, _numberPart))
-	_syntaxCheckRegex = regexp.MustCompile(fmt.Sprintf(`^(?:%s)*\?`, _operationPart))
+	_operationPart    = fmt.Sprintf(` +([a-z ]+[a-z])(?: +%s)?`, _numberPart)
+	_isMathRegex      = regexp.MustCompile(fmt.Sprintf(`^What +is +%s`, _numberPart))
+	_syntaxCheckRegex = regexp.MustCompile(fmt.Sprintf(`^(?:%s)* *\?`, _operationPart))
 	_operationRegex   = regexp.MustCompile(_operationPart)
 )
 
